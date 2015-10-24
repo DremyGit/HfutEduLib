@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+  <hostnames>
+    <hostname>http://222.195.8.201</hostname>
+    <hostname>http://172.18.6.35</hostname>
+  </hostnames>
+  <encode>GBK</encode>
+  <pages>
+    <page id="loginPage">
+      <note>系统登录页</note>
+      <url>/</url>
+      <method>GET</method>
+    </page>
+    <page id="loginAction">
+      <note>系统登录接口</note>
+      <url>/pass.asp</url>
+      <method>POST</method>
+    </page>
+    <page id="studentLessonTable">
+      <note>个人课表页</note>
+      <url>/student/asp/grkb1.asp</url>
+      <method>GET</method>
+    </page>
+    <page id="lessonAndClassOfUser">
+      <note>个人教学班列表页</note>
+      <url>/student/asp/jxbmdcx.asp</url>
+      <method>GET</method>
+    </page>
+    <page id="classStudentList">
+      <note>教学班学生名单查询</note>
+      <url>/student/asp/Jxbmdcx_1.asp</url>
+      <method>POST</method>
+    </page>
+  </pages>
+</xml>
