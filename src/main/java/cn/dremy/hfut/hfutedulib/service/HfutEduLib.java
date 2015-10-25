@@ -52,6 +52,21 @@ public class HfutEduLib {
         return RegexMatch.matchClassStudentList(getContent(res));
     }
     
+    public Map<String, String> getStudentInfo() throws Exception {
+    	HttpResponse res = Fetch.fetchSitePage(SiteConst.studentInfo);
+    	return RegexMatch.matchStudentInfo(getContent(res));
+    }
+    
+    public List<Map<String, String>> getMajorLessonPlan(String termId, String lessonTypeId, String gradeMajorId) throws Exception {
+    	Map<String, Object> requestParams = new HashMap<>();
+    	requestParams.put("xqdm", termId);
+    	requestParams.put("kclxdm", lessonTypeId);
+    	requestParams.put("ccjbyxzy", gradeMajorId);
+    	
+    	HttpResponse res = Fetch.fetchSitePage(SiteConst.majorLessonPlan, requestParams);
+    	return RegexMatch.matchMajorLessonPlanList(getContent(res));
+    }
+    
 
     
     private String getContent(HttpResponse res) throws ParseException, IOException {

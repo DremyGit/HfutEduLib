@@ -26,6 +26,9 @@ public class SiteConst {
     
     public static SitePage classStudentList;
     
+    public static SitePage studentInfo;
+    
+    public static SitePage majorLessonPlan;
     
     static {
         Map<String, Object> xmlSiteConfig = XmlParser.parseSiteConfig();
@@ -37,5 +40,7 @@ public class SiteConst {
         studentLessonTable = sitePages.get("studentLessonTable");
         lessonAndClassOfUser = sitePages.get("lessonAndClassOfUser");
         classStudentList = sitePages.get("classStudentList");
+        studentInfo = sitePages.get("studentInfo");
+        majorLessonPlan = sitePages.get("majorLessonPlan");
     }
 }
