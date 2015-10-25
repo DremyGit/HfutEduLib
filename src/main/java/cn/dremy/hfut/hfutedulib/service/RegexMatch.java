@@ -35,43 +35,62 @@ public class RegexMatch {
     	return matchList(content, regexStr, keys);
     }
     
+    public static List<Map<String, String>> matchMajorList(String content) {
+        String regexStr = "<option value=\"(?<majorId>\\d{10})\">(?<majorName>[^<])+</option>";
+        String[] keys = {"majorId", "majorName"};
+        return matchList(content, regexStr, keys);
+    }
+    
+    public static List<Map<String, String>> matchLessonClassList(String content) {
+        String regexStr = "<td[^>]+>(?<lessonName>[^<]+)</td>\\s+<td[^>]+>(?<classId>\\d{4})</td>\\s+<td[^>]+>(?<maxStudentNumber>[^<]*)</td>\\s+.+\\s+[^']+'(?<teacherId>\\d{8}).+\\s+(?<teacherName>\\S+)";
+        String[] keys = {"lessonName", "classId", "maxStudentNumber", "teacherId", "teacherName"};
+        return matchList(content, regexStr, keys);
+    }
+    
     public static Map<String, String> matchStudentInfo(String content) {
-    	
-    	Map<String, String> matchResult = new HashMap<>();
-    	
-    	String regexStr = "<tr \\S+ bgcolor=\"#D6D3CE\">\\s+(?<tr>(?:.*?\\s)*?)\\s+</tr>";
-    	String[] keys = {"tr"};
-    	
-		List<Map<String, String>> matchList = matchList(content, regexStr, keys);
-		
-		String content1 = "", content2 = "";
-		for (int i = 0; i < 7; i++) {
-			if (i < 2)
-				content1 += "\n" + matchList.get(i).get("tr");
-			else
-				content2 += "\n" + matchList.get(i).get("tr");
-		}
-		
-		String[] keys1 = {"studentId", "name", "sex", "canSelectLesson", "registerStatus", "studyStatus"};
-		String regexStr1 = "<td[^>]+>[^:]+:\\s*(?<value>[^\\s<]+)";
-		List<Map<String, String>> list1 = matchList(content1, regexStr1, "value");
-		
-		String[] keys2 = {"college", "major", "class", "examerId", "nationality", "birthday", "province",
-				"politicalStatus", "IDNumber", "marrigeStatus", "homeAddress", "homeTelephone", "highSchool",
-				"homeProvince", "phone", "inSchoolTime", "inSchoolType", "foregnLanguage"};
-		String regexStr2 = "<td[^>]+>(?<value>[^\\s&<]*)";
-		List<Map<String, String>> list2 = matchList(content2, regexStr2, "value");
-		
-		int i = 0;
-		for (Map<String, String> match : list1) {
-			matchResult.put(keys1[i++], match.get("value"));
-		}
-		
-		i = 0;
-		for (Map<String, String> match : list2) {
-			matchResult.put(keys2[i++], match.get("value"));
-		}
-		return matchResult;
+        
+        String filterRegexStr = "<tr \\S+ bgcolor=\"#D6D3CE\">\\s+(?<value>(?:.*?\\s)*?)\\s+</tr>";
+        String[] regexStrArray = {
+                "<td[^>]+>[^:]+:\\s*(?<value>[^\\s<]+)",
+                "<td[^>]+>(?<value>[^\\s&<]*)"
+            };
+        String[][] keysArray = {
+                {"studentId", "name", "sex", "canSelectLesson", "registerStatus", "studyStatus"},
+                
+                {"college", "major", "class", "examerId", "nationality", "birthday", "province",
+                  "politicalStatus", "IDNumber", "marrigeStatus", "homeAddress", "homeTelephone", "highSchool",
+                  "homeProvince", "phone", "inSchoolTime", "inSchoolType", "foregnLanguage"}
+        };
+        int filterRows = 2;
+        return matchDivideTable(content, filterRegexStr, regexStrArray, keysArray, filterRows);
+    }
+    
+    private static Map<String, String> matchDivideTable(String content, String filterRegexStr, String[] regexStrArray, String[][] keysArray, int... filterRows) {
+        Map<String, String> matchResult = new HashMap<>();
+        
+        
+        List<Map<String, String>> matchList = matchList(content, filterRegexStr, "value");
+        String[] filteredStrings = new String[keysArray.length];
+        
+        int n = 0, m = 0;
+        for (Map<String, String> match : matchList) {
+            if (m < filterRows.length && n == filterRows[m]) {
+                m++;
+            }
+            filteredStrings[m] += match.get("value") + "\n";
+            n++;
+        }
+        
+        for (int i = 0; i < keysArray.length; i++) {
+            List<Map<String, String>> list = matchList(filteredStrings[i], regexStrArray[i], "value");
+            int j = 0;
+            for (Map<String, String> match : list) {
+                matchResult.put(keysArray[i][j], match.get("value"));
+                j++;
+            }
+        }
+        return matchResult;
+        
     }
     
     private static List<Map<String, String>> matchList(String content, String regexStr, String... keys) {

@@ -40,5 +40,20 @@
       <url>/student/asp/xqkb2.asp</url>
       <method>POST</method>
     </page>
+    <page id="majorList">
+      <note>专业列表</note>
+      <url>/student/asp/xqjh.asp</url>
+      <method>GET</method>
+    </page>
+    <page id="lessonClassList">
+      <note>课程班级查询</note>
+      <url>/student/asp/xqkb2_1.asp</url>
+      <method>GET</method>
+    </page>
+    <page id="classDetailInfo">
+      <note>教学班详细信息</note>
+      <url>/student/asp/xqkb1_1.asp</url>
+      <method>GET</method>
+    </page>
   </pages>
 </xml>

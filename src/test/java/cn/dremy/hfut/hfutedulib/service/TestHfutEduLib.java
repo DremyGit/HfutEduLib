@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 
 import cn.dremy.hfut.hfutedulib.service.HfutEduLib;
 
@@ -49,6 +48,20 @@ public class TestHfutEduLib {
     	List<Map<String, String>> matchList = edu.getMajorLessonPlan("027", "1", "0120133222");
     	assertFalse(matchList.isEmpty());
     	assertFalse(matchList.get(0).isEmpty());
+    }
+    
+    @Test(timeout=1000)
+    public void testGetMajorList() throws Exception {
+        List<Map<String, String>> matchList = edu.getMajorList();
+        assertFalse(matchList.isEmpty());
+        assertFalse(matchList.get(0).isEmpty());
+    }
+    
+    @Test(timeout=1000)
+    public void testGetLessonClassList() throws Exception {
+        List<Map<String, String>> matchList = edu.getLessonClassList("027", "0200051B");
+        assertFalse(matchList.isEmpty());
+        assertFalse(matchList.get(0).isEmpty());
     }
     
     @Test(timeout=1000)

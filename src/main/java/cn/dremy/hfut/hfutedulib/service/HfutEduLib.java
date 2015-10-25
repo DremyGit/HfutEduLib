@@ -14,6 +14,7 @@ import cn.dremy.hfut.hfutedulib.common.SiteConst;
 public class HfutEduLib {
     
     public HfutEduLib(String studentId, String password) throws Exception {
+        Fetch.setAvailableHostname();
         if (!login(studentId, password)) {
             throw new Exception("Login Error");
         }
@@ -26,7 +27,7 @@ public class HfutEduLib {
         requestParams.put("password", password);
         requestParams.put("UserStyle", "student");
         HttpResponse res = Fetch.fetchSitePage(SiteConst.loginAction, requestParams);
-        EntityUtils.toString(res.getEntity(), SiteConst.encode);
+//        EntityUtils.toString(res.getEntity(), SiteConst.encode);
         return res.getStatusLine().getStatusCode() == 302 ;
     }
     
@@ -66,6 +67,22 @@ public class HfutEduLib {
     	HttpResponse res = Fetch.fetchSitePage(SiteConst.majorLessonPlan, requestParams);
     	return RegexMatch.matchMajorLessonPlanList(getContent(res));
     }
+    
+    public List<Map<String, String>> getMajorList() throws Exception {
+        HttpResponse res = Fetch.fetchSitePage(SiteConst.majorList);
+        return RegexMatch.matchMajorList(getContent(res));
+    }
+    
+    public List<Map<String, String>> getLessonClassList(String termId, String lessonId) throws Exception {
+        Map<String, Object> requestParams = new HashMap<>();
+        requestParams.put("xqdm", termId);
+        requestParams.put("kcdm", lessonId);
+        
+        HttpResponse res = Fetch.fetchSitePage(SiteConst.lessonClassList, requestParams);
+        return RegexMatch.matchLessonClassList(getContent(res));
+        
+    }
+    
     
 
     

@@ -105,8 +105,9 @@ public class Spider {
 	 */
 	public static int getGETCode(String url) throws ClientProtocolException, IOException{
 		
-		
-		return getGETResponse(url).getStatusLine().getStatusCode();
+		HttpResponse res = getGETResponse(url);
+		EntityUtils.toString(res.getEntity(), SiteConst.encode);
+		return res.getStatusLine().getStatusCode();
 	}
 
 	/**
@@ -136,7 +137,9 @@ public class Spider {
 	 */
 	public static int getPOSTCode(String url,List<NameValuePair> formparams) throws ClientProtocolException, IOException{
 		
-		return getPOSTResponse(url, formparams).getStatusLine().getStatusCode();
+	    HttpResponse res = getPOSTResponse(url, formparams);
+	    EntityUtils.toString(res.getEntity(), SiteConst.encode);
+		return res.getStatusLine().getStatusCode();
 	}
 	
 	/**

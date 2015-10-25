@@ -15,7 +15,7 @@ import cn.dremy.hfut.hfutedulib.model.SitePage;
 
 public class Fetch {
     
-    private static void setAvailableHostname() throws Exception {
+    public static void setAvailableHostname() throws Exception {
         
         if (SiteConst.preHostname == null) {
             
@@ -42,7 +42,7 @@ public class Fetch {
     
     public static HttpResponse fetchSitePage(SitePage sitePage) throws Exception {
         
-        setAvailableHostname();
+        
         try {
             switch (sitePage.getMethod()) {
             case "GET":
@@ -63,7 +63,7 @@ public class Fetch {
     
     public static HttpResponse fetchSitePage(SitePage sitePage, Map<String, Object> requestParams) throws Exception {
         
-        setAvailableHostname();
+        
         try {
             switch (sitePage.getMethod()) {
             case "GET":
