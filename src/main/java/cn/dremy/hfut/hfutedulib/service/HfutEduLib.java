@@ -13,8 +13,10 @@ import cn.dremy.hfut.hfutedulib.common.SiteConst;
 
 public class HfutEduLib {
     
+    private Fetch fetch;
+    
     public HfutEduLib(String studentId, String password) throws Exception {
-        Fetch.setAvailableHostname();
+        this.fetch = new Fetch();
         if (!login(studentId, password)) {
             throw new Exception("Login Error");
         }
@@ -26,19 +28,19 @@ public class HfutEduLib {
         requestParams.put("user", studentId);
         requestParams.put("password", password);
         requestParams.put("UserStyle", "student");
-        HttpResponse res = Fetch.fetchSitePage(SiteConst.loginAction, requestParams);
+        HttpResponse res = fetch.fetchSitePage(SiteConst.loginAction, requestParams);
 //        EntityUtils.toString(res.getEntity(), SiteConst.encode);
         return res.getStatusLine().getStatusCode() == 302 ;
     }
     
     public List<Map<String, String>> getStudentLessonTable() throws Exception {
-        HttpResponse res = Fetch.fetchSitePage(SiteConst.studentLessonTable);
+        HttpResponse res = fetch.fetchSitePage(SiteConst.studentLessonTable);
         return RegexMatch.matchStudentLessonList(getContent(res));
     }
     
     public List<Map<String, String>> getLessonAndClassOfUser() throws Exception {
         
-        HttpResponse res = Fetch.fetchSitePage(SiteConst.lessonAndClassOfUser);
+        HttpResponse res = fetch.fetchSitePage(SiteConst.lessonAndClassOfUser);
         return RegexMatch.matchLessonAndClassOfUser(getContent(res));
     }
     
@@ -49,12 +51,12 @@ public class HfutEduLib {
         requestParams.put("kcdm", lessonId);
         requestParams.put("jxbh", classNo);
         
-        HttpResponse res = Fetch.fetchSitePage(SiteConst.classStudentList, requestParams);
+        HttpResponse res = fetch.fetchSitePage(SiteConst.classStudentList, requestParams);
         return RegexMatch.matchClassStudentList(getContent(res));
     }
     
     public Map<String, String> getStudentInfo() throws Exception {
-    	HttpResponse res = Fetch.fetchSitePage(SiteConst.studentInfo);
+    	HttpResponse res = fetch.fetchSitePage(SiteConst.studentInfo);
     	return RegexMatch.matchStudentInfo(getContent(res));
     }
     
@@ -64,12 +66,12 @@ public class HfutEduLib {
     	requestParams.put("kclxdm", lessonTypeId);
     	requestParams.put("ccjbyxzy", gradeMajorId);
     	
-    	HttpResponse res = Fetch.fetchSitePage(SiteConst.majorLessonPlan, requestParams);
+    	HttpResponse res = fetch.fetchSitePage(SiteConst.majorLessonPlan, requestParams);
     	return RegexMatch.matchMajorLessonPlanList(getContent(res));
     }
     
     public List<Map<String, String>> getMajorList() throws Exception {
-        HttpResponse res = Fetch.fetchSitePage(SiteConst.majorList);
+        HttpResponse res = fetch.fetchSitePage(SiteConst.majorList);
         return RegexMatch.matchMajorList(getContent(res));
     }
     
@@ -78,7 +80,7 @@ public class HfutEduLib {
         requestParams.put("xqdm", termId);
         requestParams.put("kcdm", lessonId);
         
-        HttpResponse res = Fetch.fetchSitePage(SiteConst.lessonClassList, requestParams);
+        HttpResponse res = fetch.fetchSitePage(SiteConst.lessonClassList, requestParams);
         return RegexMatch.matchLessonClassList(getContent(res));
     }
     
@@ -87,7 +89,7 @@ public class HfutEduLib {
         requestParams.put("xqdm", termId);
         requestParams.put("kcmc", lessonName);
         
-        HttpResponse res = Fetch.fetchSitePage(SiteConst.lessonClassList, requestParams);
+        HttpResponse res = fetch.fetchSitePage(SiteConst.lessonClassList, requestParams);
         return RegexMatch.matchLessonClassList(getContent(res));
     }
     
@@ -97,7 +99,7 @@ public class HfutEduLib {
         requestParams.put("jxbh", classId);
         requestParams.put("kcdm", lessonId);
         
-        HttpResponse res = Fetch.fetchSitePage(SiteConst.classDetailInfo, requestParams);
+        HttpResponse res = fetch.fetchSitePage(SiteConst.classDetailInfo, requestParams);
         return RegexMatch.matchClassDetailInfo(getContent(res));
     }
     

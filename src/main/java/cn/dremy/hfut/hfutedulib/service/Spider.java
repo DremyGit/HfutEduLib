@@ -27,7 +27,7 @@ import cn.dremy.hfut.hfutedulib.common.SiteConst;
 public class Spider {
 
 
-	private static HttpClient client  = HttpClients.createDefault();
+	private HttpClient client  = HttpClients.createDefault();
 	
 	/**
 	 * 执行GET请求，返回Response
@@ -36,7 +36,7 @@ public class Spider {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static HttpResponse getGETResponse(String url) throws ClientProtocolException, IOException {
+	public HttpResponse getGETResponse(String url) throws ClientProtocolException, IOException {
 		
 //		System.out.println("Executing GET request " + url);
 		HttpGet request = new HttpGet(url);
@@ -53,7 +53,7 @@ public class Spider {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public static HttpResponse getPOSTResponse(String url) throws ClientProtocolException, IOException {
+    public HttpResponse getPOSTResponse(String url) throws ClientProtocolException, IOException {
         
 //      System.out.println("Executing POST request " + url);
         HttpPost request = new HttpPost(url);
@@ -71,7 +71,7 @@ public class Spider {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static HttpResponse getPOSTResponse(String url, List<NameValuePair> formparams) throws ClientProtocolException, IOException {
+	public HttpResponse getPOSTResponse(String url, List<NameValuePair> formparams) throws ClientProtocolException, IOException {
 		
 //		System.out.println("Executing POST request " + url);
 		HttpPost request = new HttpPost(url);
@@ -88,7 +88,7 @@ public class Spider {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static String getGETContent(String url) throws ClientProtocolException, IOException{
+	public String getGETContent(String url) throws ClientProtocolException, IOException{
 		
 		HttpEntity responseEntity = getGETResponse(url).getEntity();
 		String content = EntityUtils.toString(responseEntity, SiteConst.encode);
@@ -103,7 +103,7 @@ public class Spider {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static int getGETCode(String url) throws ClientProtocolException, IOException{
+	public int getGETCode(String url) throws ClientProtocolException, IOException{
 		
 		HttpResponse res = getGETResponse(url);
 		EntityUtils.toString(res.getEntity(), SiteConst.encode);
@@ -118,7 +118,7 @@ public class Spider {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static String getPOSTContent(String url,List<NameValuePair> formparams) throws ClientProtocolException, IOException{
+	public String getPOSTContent(String url,List<NameValuePair> formparams) throws ClientProtocolException, IOException{
 		
 		
 		HttpEntity responseEntity = getPOSTResponse(url, formparams).getEntity();
@@ -135,7 +135,7 @@ public class Spider {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static int getPOSTCode(String url,List<NameValuePair> formparams) throws ClientProtocolException, IOException{
+	public int getPOSTCode(String url,List<NameValuePair> formparams) throws ClientProtocolException, IOException{
 		
 	    HttpResponse res = getPOSTResponse(url, formparams);
 	    EntityUtils.toString(res.getEntity(), SiteConst.encode);
@@ -149,7 +149,7 @@ public class Spider {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static List<Cookie> getClientCookies(String url) throws ClientProtocolException, IOException {
+	public List<Cookie> getClientCookies(String url) throws ClientProtocolException, IOException {
 		CookieStore cookieStore = new BasicCookieStore();   
         HttpContext localContext = new BasicHttpContext();   
         localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);   
@@ -160,7 +160,7 @@ public class Spider {
 	}
 
 	
-	public static String getGETLocation(String url, String key) throws ClientProtocolException, IOException {
+	public String getGETLocation(String url, String key) throws ClientProtocolException, IOException {
 		Header[] headers = getGETResponse(url).getAllHeaders();
 		for(Header header : headers) {
 			if(header.getName().equals(key)) {

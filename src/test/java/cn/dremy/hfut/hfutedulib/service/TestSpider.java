@@ -13,16 +13,18 @@ import cn.dremy.hfut.hfutedulib.service.Spider;
 
 public class TestSpider {
     
+    private static Spider spider = new Spider();
+    
     @BeforeClass
     public static void init() throws Exception {
-        Fetch.setAvailableHostname();
+        new Fetch();
     }
     
     
     @Test
     public void test() throws ClientProtocolException, IOException {
         
-        int code = Spider.getGETCode(SiteConst.preHostname);
+        int code = spider.getGETCode(SiteConst.preHostname);
         assertEquals(200, code);
     }
 

@@ -15,14 +15,18 @@ import cn.dremy.hfut.hfutedulib.model.SitePage;
 
 public class Fetch {
     
-    public static void setAvailableHostname() throws Exception {
+    private Spider spider;
+    
+    public Fetch() throws Exception {
+        
+        this.spider = new Spider();
         
         if (SiteConst.preHostname == null) {
             
             boolean flag = false;
             for (String hostname : SiteConst.hostnameList) {
                 try {
-                    if (Spider.getGETCode(hostname) == 200) {
+                    if (spider.getGETCode(hostname) == 200) {
                         flag = true;
                         SiteConst.preHostname = hostname;
                         break;
@@ -40,16 +44,16 @@ public class Fetch {
     }
     
     
-    public static HttpResponse fetchSitePage(SitePage sitePage) throws Exception {
+    public HttpResponse fetchSitePage(SitePage sitePage) throws Exception {
         
         
         try {
             switch (sitePage.getMethod()) {
             case "GET":
-                return Spider.getGETResponse(SiteConst.preHostname + sitePage.getUrl());
+                return spider.getGETResponse(SiteConst.preHostname + sitePage.getUrl());
             
             case "POST":
-                return Spider.getPOSTResponse(SiteConst.preHostname + sitePage.getUrl());
+                return spider.getPOSTResponse(SiteConst.preHostname + sitePage.getUrl());
 
             default:
                 return null;
@@ -61,16 +65,16 @@ public class Fetch {
 
     }
     
-    public static HttpResponse fetchSitePage(SitePage sitePage, Map<String, Object> requestParams) throws Exception {
+    public HttpResponse fetchSitePage(SitePage sitePage, Map<String, Object> requestParams) throws Exception {
         
         
         try {
             switch (sitePage.getMethod()) {
             case "GET":
-                return Spider.getGETResponse(SiteConst.preHostname + sitePage.getUrl() + buildGetParams(requestParams));
+                return spider.getGETResponse(SiteConst.preHostname + sitePage.getUrl() + buildGetParams(requestParams));
             
             case "POST":
-                return Spider.getPOSTResponse(SiteConst.preHostname + sitePage.getUrl(), buildPostParams(requestParams));
+                return spider.getPOSTResponse(SiteConst.preHostname + sitePage.getUrl(), buildPostParams(requestParams));
 
             default:
                 return null;
@@ -82,7 +86,7 @@ public class Fetch {
 
     }
     
-    public static String buildGetParams(Map<String, Object> requestParams) {
+    public String buildGetParams(Map<String, Object> requestParams) {
         Set<String> keySet = requestParams.keySet();
         if (keySet.isEmpty()) {
             return "";
@@ -98,7 +102,7 @@ public class Fetch {
         return sb.toString();
     }
     
-    public static List<NameValuePair> buildPostParams(Map<String, Object> requestParams) {
+    public List<NameValuePair> buildPostParams(Map<String, Object> requestParams) {
 
        Set<String> keySet = requestParams.keySet();
        List<NameValuePair> postParamList = new ArrayList<>();
