@@ -21,47 +21,53 @@ public class TestHfutEduLib {
         assertTrue(true);
     }
 
-    
     @Test(timeout=1000)
     public void testGetStudentLessonTable() throws Exception {
         List<Map<String, String>> matchList = edu.getStudentLessonTable();
-        assertFalse(matchList.isEmpty());
-        assertFalse(matchList.get(0).isEmpty());
+        assertEquals(11, matchList.size());
+        assertEquals(7, matchList.get(0).size());
     }
     
     @Test(timeout=1000)
     public void testGetLessonAndClassOfUser() throws Exception {
         List<Map<String, String>> matchList = edu.getLessonAndClassOfUser();
         assertFalse(matchList.isEmpty());
-        assertFalse(matchList.get(0).isEmpty());
+        assertEquals(3, matchList.get(0).size());
     }
     
     @Test(timeout=1000)
-    public void testGetClassStudentListOfUser() throws Exception {
+    public void testGetClassStudentList() throws Exception {
         List<Map<String, String>> matchList = edu.getClassStudentList("027", "0521032B", "0002");
-        assertFalse(matchList.isEmpty());
-        assertFalse(matchList.get(0).isEmpty());
+        assertEquals(92, matchList.size());
+        assertEquals(3, matchList.get(0).size());
     }
     
     @Test(timeout=1000)
     public void testGetMajorLessonPlan() throws Exception {
     	List<Map<String, String>> matchList = edu.getMajorLessonPlan("027", "1", "0120133222");
-    	assertFalse(matchList.isEmpty());
-    	assertFalse(matchList.get(0).isEmpty());
+    	assertEquals(11, matchList.size());
+        assertEquals(6, matchList.get(0).size());
     }
     
     @Test(timeout=1000)
     public void testGetMajorList() throws Exception {
         List<Map<String, String>> matchList = edu.getMajorList();
         assertFalse(matchList.isEmpty());
-        assertFalse(matchList.get(0).isEmpty());
+        assertEquals(2, matchList.get(0).size());
     }
     
     @Test(timeout=1000)
-    public void testGetLessonClassList() throws Exception {
-        List<Map<String, String>> matchList = edu.getLessonClassList("027", "0200051B");
-        assertFalse(matchList.isEmpty());
-        assertFalse(matchList.get(0).isEmpty());
+    public void testGetLessonClassListByLessonId() throws Exception {
+        List<Map<String, String>> matchList = edu.getLessonClassListByLessonId("027", "0200051B");
+        assertEquals(29, matchList.size());
+        assertEquals(6, matchList.get(0).size());
+    }
+    
+    @Test(timeout=1000)
+    public void testGetLessonClassListByLessonName() throws Exception {
+        List<Map<String, String>> matchList = edu.getLessonClassListByLessonName("027", "离散");
+        assertEquals(3, matchList.size());
+        assertEquals(6, matchList.get(0).size());
     }
     
     @Test(timeout=1000)
@@ -77,6 +83,21 @@ public class TestHfutEduLib {
     	}
     	assertEquals(24, keySet.size());
     	assertEquals(3, nullNum);
+    }
+    
+    @Test(timeout=1000)
+    public void testGetClassDetailInfo() throws Exception {
+        Map<String, String> match = edu.getClassDetailInfo("027", "0001", "0200051B");
+        assertFalse(match.isEmpty());
+        Set<String> keySet = match.keySet();
+        int nullNum = 0;
+        for (String key : keySet) {
+            if (match.get(key).equals("")) {
+                nullNum++;
+            }
+        }
+        assertEquals(14, keySet.size());
+        assertEquals(2, nullNum);
     }
     
 }

@@ -2,6 +2,7 @@
 <xml>
   <hostnames>
     <hostname>http://172.18.6.35</hostname>
+    <hostname>http://172.18.6.95</hostname>
   </hostnames>
   <encode>GBK</encode>
   <pages>
@@ -45,10 +46,15 @@
       <url>/student/asp/xqjh.asp</url>
       <method>GET</method>
     </page>
+<!--     <page id="lessonClassList"> -->
+<!--       <note>课程班级查询</note> -->
+<!--       <url>/student/asp/xqkb2_1.asp</url> -->
+<!--       <method>GET</method> -->
+<!--     </page> -->
     <page id="lessonClassList">
       <note>课程班级查询</note>
-      <url>/student/asp/xqkb2_1.asp</url>
-      <method>GET</method>
+      <url>/student/asp/xqkb1.asp</url>
+      <method>POST</method>
     </page>
     <page id="classDetailInfo">
       <note>教学班详细信息</note>

@@ -73,14 +73,32 @@ public class HfutEduLib {
         return RegexMatch.matchMajorList(getContent(res));
     }
     
-    public List<Map<String, String>> getLessonClassList(String termId, String lessonId) throws Exception {
+    public List<Map<String, String>> getLessonClassListByLessonId(String termId, String lessonId) throws Exception {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("xqdm", termId);
         requestParams.put("kcdm", lessonId);
         
         HttpResponse res = Fetch.fetchSitePage(SiteConst.lessonClassList, requestParams);
         return RegexMatch.matchLessonClassList(getContent(res));
+    }
+    
+    public List<Map<String, String>> getLessonClassListByLessonName(String termId, String lessonName) throws Exception {
+        Map<String, Object> requestParams = new HashMap<>();
+        requestParams.put("xqdm", termId);
+        requestParams.put("kcmc", lessonName);
         
+        HttpResponse res = Fetch.fetchSitePage(SiteConst.lessonClassList, requestParams);
+        return RegexMatch.matchLessonClassList(getContent(res));
+    }
+    
+    public Map<String, String> getClassDetailInfo(String termId, String classId, String lessonId) throws Exception {
+        Map<String, Object> requestParams = new HashMap<>();
+        requestParams.put("xqdm", termId);
+        requestParams.put("jxbh", classId);
+        requestParams.put("kcdm", lessonId);
+        
+        HttpResponse res = Fetch.fetchSitePage(SiteConst.classDetailInfo, requestParams);
+        return RegexMatch.matchClassDetailInfo(getContent(res));
     }
     
     

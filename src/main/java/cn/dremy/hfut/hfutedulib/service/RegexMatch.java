@@ -42,8 +42,8 @@ public class RegexMatch {
     }
     
     public static List<Map<String, String>> matchLessonClassList(String content) {
-        String regexStr = "<td[^>]+>(?<lessonName>[^<]+)</td>\\s+<td[^>]+>(?<classId>\\d{4})</td>\\s+<td[^>]+>(?<maxStudentNumber>[^<]*)</td>\\s+.+\\s+[^']+'(?<teacherId>\\d{8}).+\\s+(?<teacherName>\\S+)";
-        String[] keys = {"lessonName", "classId", "maxStudentNumber", "teacherId", "teacherName"};
+        String regexStr = "<td[^>]+>(?<lessonName>[^<]+)</td>\\s+<td[^>]+>(?<classId>\\d{4})</td>\\s+<td[^>]+>(?<maxStudentNumber>[^<]*)</td>\\s+.+\\s+[^']+'(?<teacherId>\\d{8}).+\\s+(?<teacherName>\\S+)\\s+\\S+\\s+</td>\\s+<td[^>]+>(?<lessonType>[^<]+)";
+        String[] keys = {"lessonName", "classId", "maxStudentNumber", "teacherId", "teacherName", "lessonType"};
         return matchList(content, regexStr, keys);
     }
     
@@ -65,12 +65,28 @@ public class RegexMatch {
         return matchDivideTable(content, filterRegexStr, regexStrArray, keysArray, filterRows);
     }
     
+    public static Map<String, String> matchClassDetailInfo(String content) {
+        String filterRegexStr = "<tr.+?bgcolor=\"#D6D3CE\">\\s+(?<value>(?:.+\\s+)+?)</tr>";
+        String[] regexStrArray = {
+                "<td align=\"center\">(?<value>[^&<]+)</td>",
+                "<td.+?bgcolor=\"#D6D3CE\">\\s*(?<value>[^<\n]*)"
+        };
+        
+        String[][] keysArray = {
+                {"classId", "lessonName", "lessonType", "lessonCredit", "teachUnit", "campus",
+                    "lessonTime", "examType", "sexRequire", "studentNumber"},
+                {"priorityClass", "timePlace", "forbidRange", "remarks"}
+        };
+        
+        return matchDivideTable(content, filterRegexStr, regexStrArray, keysArray);
+    }
+    
     private static Map<String, String> matchDivideTable(String content, String filterRegexStr, String[] regexStrArray, String[][] keysArray, int... filterRows) {
         Map<String, String> matchResult = new HashMap<>();
         
         
         List<Map<String, String>> matchList = matchList(content, filterRegexStr, "value");
-        String[] filteredStrings = new String[keysArray.length];
+        String[] filteredStrings = new String[filterRows.length + 1];
         
         int n = 0, m = 0;
         for (Map<String, String> match : matchList) {
@@ -81,8 +97,14 @@ public class RegexMatch {
             n++;
         }
         
-        for (int i = 0; i < keysArray.length; i++) {
-            List<Map<String, String>> list = matchList(filteredStrings[i], regexStrArray[i], "value");
+        for (int i = 0; i < regexStrArray.length; i++) {
+            List<Map<String, String>> list = null;
+            if (filterRows.length == 0) {
+                list = matchList(filteredStrings[0], regexStrArray[i], "value");
+            } else {
+                list = matchList(filteredStrings[i], regexStrArray[i], "value");
+            }
+            
             int j = 0;
             for (Map<String, String> match : list) {
                 matchResult.put(keysArray[i][j], match.get("value"));

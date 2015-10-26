@@ -2,7 +2,6 @@ package cn.dremy.hfut.hfutedulib.common;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
