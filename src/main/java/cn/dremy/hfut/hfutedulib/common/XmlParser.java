@@ -1,6 +1,7 @@
 package cn.dremy.hfut.hfutedulib.common;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,15 +19,18 @@ public class XmlParser {
     public static Map<String, Object> parseSiteConfig() {
         Map<String, Object> siteConfig = new HashMap<String, Object>();
         String filePath = XmlParser.class.getClassLoader().getResource("urls.xml").getPath();
-       
+        
         try {
-
-            File file = new File(filePath);
             SAXReader reader = new SAXReader();
             Document document;
-            
-            document = reader.read(file);
-            
+            if (filePath.indexOf("!") != -1) {
+                InputStream input = XmlParser.class.getResourceAsStream("/urls.xml");
+                document = reader.read(input);
+            } else {
+                File file = new File(filePath);
+                document = reader.read(file);
+            }
+
             Element root = document.getRootElement();
             
             Element hostnamesElement = root.element("hostnames");
