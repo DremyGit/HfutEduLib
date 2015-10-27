@@ -36,6 +36,8 @@ public class SiteConst {
     
     public static SitePage classDetailInfo;
     
+    public static SitePage lessonScoreList;
+    
     static {
         Map<String, Object> xmlSiteConfig = XmlParser.parseSiteConfig();
         hostnameList = (List<String>) xmlSiteConfig.get("hostnameList");
@@ -51,5 +53,6 @@ public class SiteConst {
         majorList = sitePages.get("majorList");
         lessonClassList = sitePages.get("lessonClassList");
         classDetailInfo = sitePages.get("classDetailInfo");
+        lessonScoreList = sitePages.get("lessonScoreList");
     }
 }

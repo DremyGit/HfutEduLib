@@ -71,6 +71,13 @@ public class TestHfutEduLib {
     }
     
     @Test(timeout=1000)
+    public void testGetLessonScoreList() throws Exception {
+    	List<Map<String, String>> matchList = edu.getLessonScoreList();
+    	assertFalse(matchList.isEmpty());
+    	assertEquals(7, matchList.get(0).size());
+    }
+    
+    @Test(timeout=1000)
     public void testGetStudentInfo() throws Exception {
     	Map<String, String> match = edu.getStudentInfo();
     	assertFalse(match.isEmpty());

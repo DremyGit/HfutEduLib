@@ -47,6 +47,12 @@ public class RegexMatch {
         return matchList(content, regexStr, keys);
     }
     
+    public static List<Map<String, String>> matchLessonScoreList(String content) {
+    	String regexStr = "<TD>(?<termName>[^<]+)</TD>\\s+<TD[^>]*>(?<lessonId>[^<]+)</TD>\\s+<TD>(?<lessonName>[^<]+)</TD>\\s+<TD[^>]*>(?<classId>[^<]+)</TD>\\s+<TD[^>]*>\\s+(?<lessonScore>\\S+)\\s*</TD>\\s+<TD[^>]*>(?<resitScore>[^<]*)</TD>\\s+<TD>(?<lessonCredit>[^<]+)</TD>";
+    	String[] keys = {"termName", "lessonId", "lessonName", "classId", "lessonScore", "resitScore", "lessonCredit"};
+    	return matchList(content, regexStr, keys);
+    }
+    
     public static Map<String, String> matchStudentInfo(String content) {
         
         String filterRegexStr = "<tr \\S+ bgcolor=\"#D6D3CE\">\\s+(?<value>(?:.*?\\s)*?)\\s+</tr>";

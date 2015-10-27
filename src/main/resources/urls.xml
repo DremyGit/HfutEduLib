@@ -61,5 +61,10 @@
       <url>/student/asp/xqkb1_1.asp</url>
       <method>GET</method>
     </page>
+    <page id="lessonScoreList">
+      <note>考试成绩查询</note>
+      <url>/student/asp/Select_Success.asp</url>
+      <method>GET</method>
+    </page>
   </pages>
 </xml>

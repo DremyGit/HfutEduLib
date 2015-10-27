@@ -103,6 +103,11 @@ public class HfutEduLib {
         return RegexMatch.matchClassDetailInfo(getContent(res));
     }
     
+    public List<Map<String, String>> getLessonScoreList() throws Exception {
+    	HttpResponse res = fetch.fetchSitePage(SiteConst.lessonScoreList);
+    	return RegexMatch.matchLessonScoreList(getContent(res));
+    }
+    
     
 
     
