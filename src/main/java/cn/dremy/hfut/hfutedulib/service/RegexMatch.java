@@ -2,22 +2,20 @@ package cn.dremy.hfut.hfutedulib.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import cn.dremy.hfut.hfutedulib.model.Lesson;
+import cn.dremy.hfut.hfutedulib.model.HfutClass;
 
 public class RegexMatch {
 
     public static List<Map<String, String>> matchLessonAndClassOfUser(String content) {
         
-        String regexStr = "name=\"xqdm\" value=(?<xqdm>\\w*)>\\s*.*value=(?<kcdm>\\w*)>\\s*.*value=(?<jxbh>\\w*)>\\s+.+\\s+.+\\s+[^>]*>(?<lessonName>[^<]*)";
-        String[] keys = {"xqdm", "kcdm", "lessonName"};
+        String regexStr = "name=\"xqdm\" value=(?<termId>\\w*)>\\s*.*value=(?<lessonId>\\w*)>\\s*.*value=(?<jxbh>\\w*)>\\s+.+\\s+.+\\s+[^>]*>(?<lessonName>[^<]*)";
+        String[] keys = {"termId", "lessonId", "lessonName"};
         return matchList(content, regexStr, keys);
     }
     
@@ -27,21 +25,21 @@ public class RegexMatch {
         return matchList(content, regexStr, keys);
     }
     
-    public static Lesson[][][] matchStudentLessonList(String content) {
+    public static HfutClass[][][] matchStudentLessonList(String content) {
         String regexStr = "<TR[^>]+>\\s+.+\\s+<TD>(?<Mon>[^>]*)</TD>\\s+<TD>(?<Tue>[^>]*)</TD>\\s+<TD>(?<Wed>[^>]*)</TD>\\s+<TD>(?<Thu>[^>]*)</TD>\\s+<TD>(?<Fri>[^>]*)</TD>\\s+<TD>(?<Sat>[^>]*)</TD>\\s+<TD>(?<Sun>[^>]*)</TD>\\s+";
         String[] keys = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
         List<Map<String, String>> matchList = matchList(content, regexStr, keys);
         if (matchList == null) {
             return null;
         }
-        Lesson lessonTable[][][] = new Lesson[7][11][3];
+        HfutClass lessonTable[][][] = new HfutClass[7][11][3];
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 7; j++) {
                 Map<String, String> match = matchList.get(i);
                 String lessons = match.get(keys[j]);
                 List<Map<String, String>> classDetail = matchLessonTableDetail(lessons);
                 for (int k = 0; k < classDetail.size(); k++) {
-                    Lesson lesson = new Lesson(classDetail.get(k).get("lessonName"), classDetail.get(k).get("classPlace"), classDetail.get(k).get("timeBegin"), classDetail.get(k).get("timeEnd"));
+                    HfutClass lesson = new HfutClass(classDetail.get(k).get("lessonName"), classDetail.get(k).get("classPlace"), classDetail.get(k).get("timeBegin"), classDetail.get(k).get("timeEnd"));
                     lessonTable[j][i][k] = lesson ;
                 }
                 
@@ -63,7 +61,7 @@ public class RegexMatch {
     }
     
     public static List<Map<String, String>> matchMajorList(String content) {
-        String regexStr = "<option value=\"(?<majorId>\\d{10})\">(?<majorName>[^<])+</option>";
+        String regexStr = "<option value=\"(?<majorId>\\d{10})\">(?<majorName>[^<]+)</option>";
         String[] keys = {"majorId", "majorName"};
         return matchList(content, regexStr, keys);
     }
@@ -80,7 +78,7 @@ public class RegexMatch {
     	return matchList(content, regexStr, keys);
     }
     
-    public static Map<String, String> matchStudentInfo(String content) {
+    public static Map<String, String> matchStudentDetailInfo(String content) {
         
         String filterRegexStr = "<tr \\S+ bgcolor=\"#D6D3CE\">\\s+(?<value>(?:.*?\\s)*?)\\s+</tr>";
         String[] regexStrArray = {

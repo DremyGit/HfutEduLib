@@ -9,7 +9,9 @@ import java.util.Set;
 
 import org.junit.BeforeClass;
 
-import cn.dremy.hfut.hfutedulib.model.Lesson;
+import cn.dremy.hfut.hfutedulib.model.HfutClass;
+import cn.dremy.hfut.hfutedulib.model.HfutMajor;
+import cn.dremy.hfut.hfutedulib.model.HfutStudent;
 import cn.dremy.hfut.hfutedulib.service.HfutEduLib;
 
 public class TestHfutEduLib {
@@ -24,7 +26,7 @@ public class TestHfutEduLib {
 
     @Test(timeout=1000)
     public void testGetStudentLessonTable() throws Exception {
-        Lesson[][][] lessonTable = edu.getStudentLessonTable();
+        HfutClass[][][] lessonTable = edu.getStudentLessonTable();
         assertEquals(7, lessonTable.length);
         assertEquals(11, lessonTable[0].length);
 //        for (int i = 0; i < 7; i++) {
@@ -46,9 +48,9 @@ public class TestHfutEduLib {
     
     @Test(timeout=1000)
     public void testGetClassStudentList() throws Exception {
-        List<Map<String, String>> matchList = edu.getClassStudentList("027", "0521032B", "0002");
+        List<HfutStudent> matchList = edu.getClassStudentList("027", "0521032B", "0002");
         assertEquals(92, matchList.size());
-        assertEquals(3, matchList.get(0).size());
+        assertNotNull(matchList.get(0).getStudentName());
     }
     
     @Test(timeout=1000)
@@ -60,9 +62,9 @@ public class TestHfutEduLib {
     
     @Test(timeout=1000)
     public void testGetMajorList() throws Exception {
-        List<Map<String, String>> matchList = edu.getMajorList();
+        List<HfutMajor> matchList = edu.getMajorList();
         assertFalse(matchList.isEmpty());
-        assertEquals(2, matchList.get(0).size());
+        assertNotNull(matchList.get(0).getMajorName());
     }
     
     @Test(timeout=1000)
@@ -88,7 +90,7 @@ public class TestHfutEduLib {
     
     @Test(timeout=1000)
     public void testGetStudentInfo() throws Exception {
-    	Map<String, String> match = edu.getStudentInfo();
+    	Map<String, String> match = edu.getStudentDetailInfo();
     	assertFalse(match.isEmpty());
     	Set<String> keySet = match.keySet();
     	int nullNum = 0;
@@ -103,7 +105,7 @@ public class TestHfutEduLib {
     
     @Test(timeout=1000)
     public void testGetClassDetailInfo() throws Exception {
-        Map<String, String> match = edu.getClassDetailInfo("027", "0001", "0200051B");
+        Map<String, String> match = edu.getClassDetailInfo("027", "0200051B", "0001");
         assertFalse(match.isEmpty());
         Set<String> keySet = match.keySet();
         int nullNum = 0;

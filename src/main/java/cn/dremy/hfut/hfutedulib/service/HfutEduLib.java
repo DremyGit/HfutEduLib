@@ -1,6 +1,8 @@
 package cn.dremy.hfut.hfutedulib.service;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,12 +12,20 @@ import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 
 import cn.dremy.hfut.hfutedulib.common.SiteConst;
-import cn.dremy.hfut.hfutedulib.model.Lesson;
+import cn.dremy.hfut.hfutedulib.model.HfutClass;
+import cn.dremy.hfut.hfutedulib.model.HfutMajor;
+import cn.dremy.hfut.hfutedulib.model.HfutStudent;
 
 public class HfutEduLib {
     
     private Fetch fetch;
     
+    /**
+     * 创建HfutEduLib用户对象,需要学号和密码进行登录
+     * @param studentId 学生用户学号
+     * @param password 教务系统密码
+     * @throws Exception 网络错误或者登录失败时抛出异常
+     */
     public HfutEduLib(String studentId, String password) throws Exception {
         this.fetch = new Fetch();
         if (!login(studentId, password)) {
@@ -23,29 +33,49 @@ public class HfutEduLib {
         }
     }
     
-    public boolean login(String studentId, String password) throws Exception {
+    private boolean login(String studentId, String password) throws Exception {
         
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("user", studentId);
         requestParams.put("password", password);
         requestParams.put("UserStyle", "student");
         HttpResponse res = fetch.fetchSitePage(SiteConst.loginAction, requestParams);
-//        EntityUtils.toString(res.getEntity(), SiteConst.encode);
         return res.getStatusLine().getStatusCode() == 302 ;
     }
     
-    public Lesson[][][] getStudentLessonTable() throws Exception {
+    /**
+     * 获取登录用户的当前课程表信息
+     * lessonName, classPlace, timeBegin, timeEnd
+     * @return 返回教学班三维数组, 第一维表示星期, 第二维表示上课时间, 第三维表示不同时期相同时间的课程
+     * @throws Exception
+     */
+    public HfutClass[][][] getStudentLessonTable() throws Exception {
         HttpResponse res = fetch.fetchSitePage(SiteConst.studentLessonTable);
         return RegexMatch.matchStudentLessonList(getContent(res));
     }
     
+    /**
+     * 获取登录用户当前学期的教学班列表(含课程信息)
+     * termId, lessonId, lessonName
+     * @return 教学班列表
+     * @throws Exception
+     */
     public List<Map<String, String>> getLessonAndClassOfUser() throws Exception {
         
         HttpResponse res = fetch.fetchSitePage(SiteConst.lessonAndClassOfUser);
         return RegexMatch.matchLessonAndClassOfUser(getContent(res));
     }
     
-    public List<Map<String, String>> getClassStudentList(String termId, String lessonId, String classId) throws Exception {
+    /**
+     * 获取教学班中的学生列表
+     * id, studentId, studentName
+     * @param termId 学期id
+     * @param lessonId 课程id
+     * @param classId 教学班id
+     * @return 学生列表
+     * @throws Exception
+     */
+    public List<HfutStudent> getClassStudentList(String termId, String lessonId, String classId) throws Exception {
         
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("xqdm", termId);
@@ -53,14 +83,29 @@ public class HfutEduLib {
         requestParams.put("jxbh", classId);
         
         HttpResponse res = fetch.fetchSitePage(SiteConst.classStudentList, requestParams);
-        return RegexMatch.matchClassStudentList(getContent(res));
+        List<Map<String, String>> matchList = RegexMatch.matchClassStudentList(getContent(res));
+        return mapListToModelList(HfutStudent.class, matchList);
     }
     
-    public Map<String, String> getStudentInfo() throws Exception {
+    /**
+     * 获取登录用户的学生信息
+     * @return 学生信息
+     * @throws Exception
+     */
+    public Map<String, String> getStudentDetailInfo() throws Exception {
     	HttpResponse res = fetch.fetchSitePage(SiteConst.studentInfo);
-    	return RegexMatch.matchStudentInfo(getContent(res));
+    	return RegexMatch.matchStudentDetailInfo(getContent(res));
     }
     
+    /**
+     * 获取专业的课程计划
+     * id, lessonId, lessonName, lessonCredit, lessonTime, teachUnit
+     * @param termId 学期id
+     * @param lessonTypeId 课程类型id, 必修课为1, 选修课为2
+     * @param gradeMajorId 年级专业id
+     * @return 课程列表
+     * @throws Exception
+     */
     public List<Map<String, String>> getMajorLessonPlan(String termId, String lessonTypeId, String gradeMajorId) throws Exception {
     	Map<String, Object> requestParams = new HashMap<>();
     	requestParams.put("xqdm", termId);
@@ -71,11 +116,26 @@ public class HfutEduLib {
     	return RegexMatch.matchMajorLessonPlanList(getContent(res));
     }
     
-    public List<Map<String, String>> getMajorList() throws Exception {
+    /**
+     * 获取年级专业列表
+     * majorId, majorName
+     * @return 年级专业列表
+     * @throws Exception
+     */
+    public List<HfutMajor> getMajorList() throws Exception {
         HttpResponse res = fetch.fetchSitePage(SiteConst.majorList);
-        return RegexMatch.matchMajorList(getContent(res));
+        List<Map<String, String>> matchList = RegexMatch.matchMajorList(getContent(res));
+        return mapListToModelList(HfutMajor.class, matchList);
     }
     
+    /**
+     * 通过课程id获取课程的教学班列表
+     * lessonName, classId, maxStudentNumber, teacherId, teacherName, lessonType
+     * @param termId 学期id
+     * @param lessonId 课程id
+     * @return 教学班列表
+     * @throws Exception
+     */
     public List<Map<String, String>> getLessonClassListByLessonId(String termId, String lessonId) throws Exception {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("xqdm", termId);
@@ -85,6 +145,14 @@ public class HfutEduLib {
         return RegexMatch.matchLessonClassList(getContent(res));
     }
     
+    /**
+     * 通过课程名查询课程, 获取相关课程的教学班列表
+     * lessonName, classId, maxStudentNumber, teacherId, teacherName, lessonType
+     * @param termId 学期id
+     * @param lessonName 课程名(可使用关键字)
+     * @return 教学班列表
+     * @throws Exception
+     */
     public List<Map<String, String>> getLessonClassListByLessonName(String termId, String lessonName) throws Exception {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("xqdm", termId);
@@ -94,7 +162,16 @@ public class HfutEduLib {
         return RegexMatch.matchLessonClassList(getContent(res));
     }
     
-    public Map<String, String> getClassDetailInfo(String termId, String classId, String lessonId) throws Exception {
+
+    /**
+     * 获取教学班详细信息
+     * @param termId 学期id
+     * @param lessonId 课程id
+     * @param classId 教学班id
+     * @return 教学班详情
+     * @throws Exception
+     */
+    public Map<String, String> getClassDetailInfo(String termId, String lessonId, String classId) throws Exception {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("xqdm", termId);
         requestParams.put("jxbh", classId);
@@ -104,6 +181,12 @@ public class HfutEduLib {
         return RegexMatch.matchClassDetailInfo(getContent(res));
     }
     
+    /**
+     * 获取登录用户的全部考试成绩列表
+     * termName, lessonId, lessonName, classId, lessonScore, resitScore, lessonCredit
+     * @return 考试成绩列表
+     * @throws Exception
+     */
     public List<Map<String, String>> getLessonScoreList() throws Exception {
     	HttpResponse res = fetch.fetchSitePage(SiteConst.lessonScoreList);
     	return RegexMatch.matchLessonScoreList(getContent(res));
@@ -115,6 +198,18 @@ public class HfutEduLib {
     private String getContent(HttpResponse res) throws ParseException, IOException {
         String content =  EntityUtils.toString(res.getEntity(), SiteConst.encode);
         return content;
+    }
+    
+    private <T> T mapToModel(Class<T> type, Map<String, String> map) throws Exception {
+        return type.getConstructor(Map.class).newInstance(map);
+    }
+    
+    private <T> List<T> mapListToModelList(Class<T> type, List<Map<String, String>> mapList) throws Exception {
+        List<T> resultList = new ArrayList<>();
+        for (Map<String, String> map : mapList) {
+            resultList.add(mapToModel(type, map));
+        }
+        return resultList;
     }
     
 

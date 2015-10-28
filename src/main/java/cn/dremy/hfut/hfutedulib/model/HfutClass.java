@@ -1,16 +1,36 @@
 package cn.dremy.hfut.hfutedulib.model;
 
-public class Lesson {
+public class HfutClass {
+    
+    private String lessonId;
 
     private String lessonName;
     
+    private String lessonCredit;
+    
+    private String lessonScore;
+    
+    private String resitScore;
+    
+    private String classId;
+    
     private String classPlace;
+    
+    private String maxStudentNumber;
+    
+    private String teacherId;
+    
+    private String teacherName;
+    
+    private String lessonTime;
     
     private String timeBegin;
     
     private String timeEnd;
+    
+    private String teachUnit;
 
-    public Lesson(String lessonName, String classPlace, String timeBegin, String timeEnd) {
+    public HfutClass(String lessonName, String classPlace, String timeBegin, String timeEnd) {
         this.lessonName = lessonName;
         this.classPlace = classPlace;
         this.timeBegin = timeBegin;
