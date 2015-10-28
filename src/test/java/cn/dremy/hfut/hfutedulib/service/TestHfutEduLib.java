@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.junit.BeforeClass;
 
+import cn.dremy.hfut.hfutedulib.model.Lesson;
 import cn.dremy.hfut.hfutedulib.service.HfutEduLib;
 
 public class TestHfutEduLib {
@@ -23,9 +24,17 @@ public class TestHfutEduLib {
 
     @Test(timeout=1000)
     public void testGetStudentLessonTable() throws Exception {
-        List<Map<String, String>> matchList = edu.getStudentLessonTable();
-        assertEquals(11, matchList.size());
-        assertEquals(7, matchList.get(0).size());
+        Lesson[][][] lessonTable = edu.getStudentLessonTable();
+        assertEquals(7, lessonTable.length);
+        assertEquals(11, lessonTable[0].length);
+//        for (int i = 0; i < 7; i++) {
+//            for (int j = 0; j < 11; j++) {
+//                for (int k = 0; k < 3 && lessonTable[i][j][k] != null; k++) {
+//                    System.out.print(lessonTable[i][j][k] + "\t\t\t");
+//                }
+//            }
+//            System.out.println("");
+//        }
     }
     
     @Test(timeout=1000)

@@ -10,6 +10,7 @@ import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 
 import cn.dremy.hfut.hfutedulib.common.SiteConst;
+import cn.dremy.hfut.hfutedulib.model.Lesson;
 
 public class HfutEduLib {
     
@@ -33,7 +34,7 @@ public class HfutEduLib {
         return res.getStatusLine().getStatusCode() == 302 ;
     }
     
-    public List<Map<String, String>> getStudentLessonTable() throws Exception {
+    public Lesson[][][] getStudentLessonTable() throws Exception {
         HttpResponse res = fetch.fetchSitePage(SiteConst.studentLessonTable);
         return RegexMatch.matchStudentLessonList(getContent(res));
     }
@@ -44,12 +45,12 @@ public class HfutEduLib {
         return RegexMatch.matchLessonAndClassOfUser(getContent(res));
     }
     
-    public List<Map<String, String>> getClassStudentList(String termId, String lessonId, String classNo) throws Exception {
+    public List<Map<String, String>> getClassStudentList(String termId, String lessonId, String classId) throws Exception {
         
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("xqdm", termId);
         requestParams.put("kcdm", lessonId);
-        requestParams.put("jxbh", classNo);
+        requestParams.put("jxbh", classId);
         
         HttpResponse res = fetch.fetchSitePage(SiteConst.classStudentList, requestParams);
         return RegexMatch.matchClassStudentList(getContent(res));

@@ -2,11 +2,15 @@ package cn.dremy.hfut.hfutedulib.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
+import cn.dremy.hfut.hfutedulib.model.Lesson;
 
 public class RegexMatch {
 
@@ -23,9 +27,32 @@ public class RegexMatch {
         return matchList(content, regexStr, keys);
     }
     
-    public static List<Map<String, String>> matchStudentLessonList(String content) {
+    public static Lesson[][][] matchStudentLessonList(String content) {
         String regexStr = "<TR[^>]+>\\s+.+\\s+<TD>(?<Mon>[^>]*)</TD>\\s+<TD>(?<Tue>[^>]*)</TD>\\s+<TD>(?<Wed>[^>]*)</TD>\\s+<TD>(?<Thu>[^>]*)</TD>\\s+<TD>(?<Fri>[^>]*)</TD>\\s+<TD>(?<Sat>[^>]*)</TD>\\s+<TD>(?<Sun>[^>]*)</TD>\\s+";
         String[] keys = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        List<Map<String, String>> matchList = matchList(content, regexStr, keys);
+        if (matchList == null) {
+            return null;
+        }
+        Lesson lessonTable[][][] = new Lesson[7][11][3];
+        for (int i = 0; i < 11; i++) {
+            for (int j = 0; j < 7; j++) {
+                Map<String, String> match = matchList.get(i);
+                String lessons = match.get(keys[j]);
+                List<Map<String, String>> classDetail = matchLessonTableDetail(lessons);
+                for (int k = 0; k < classDetail.size(); k++) {
+                    Lesson lesson = new Lesson(classDetail.get(k).get("lessonName"), classDetail.get(k).get("classPlace"), classDetail.get(k).get("timeBegin"), classDetail.get(k).get("timeEnd"));
+                    lessonTable[j][i][k] = lesson ;
+                }
+                
+            }
+        }
+        return lessonTable;
+    }
+    
+    private static List<Map<String, String>> matchLessonTableDetail(String content) {
+        String regexStr = "(?<lessonName>[^<>\\[]+)\\[(?<classPlace>[^ ]+) \\((?<timeBegin>\\d+)-(?<timeEnd>\\d+)[^/]+/";
+        String[] keys = {"lessonName", "classPlace", "timeBegin", "timeEnd"};
         return matchList(content, regexStr, keys);
     }
     
