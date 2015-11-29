@@ -44,7 +44,7 @@ public class Fetch {
     }
     
     
-    public HttpResponse fetchSitePage(SitePage sitePage) throws Exception {
+    public HttpResponse fetchSitePage(SitePage sitePage) {
         
         
         try {
@@ -65,7 +65,7 @@ public class Fetch {
 
     }
     
-    public HttpResponse fetchSitePage(SitePage sitePage, Map<String, Object> requestParams) throws Exception {
+    public HttpResponse fetchSitePage(SitePage sitePage, Map<String, Object> requestParams) {
         
         
         try {

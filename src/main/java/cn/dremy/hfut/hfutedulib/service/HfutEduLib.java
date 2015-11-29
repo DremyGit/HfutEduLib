@@ -1,7 +1,6 @@
 package cn.dremy.hfut.hfutedulib.service;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +32,7 @@ public class HfutEduLib {
         }
     }
     
-    private boolean login(String studentId, String password) throws Exception {
+    private boolean login(String studentId, String password) {
         
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("user", studentId);
@@ -49,7 +48,7 @@ public class HfutEduLib {
      * @return 返回教学班三维数组, 第一维表示星期, 第二维表示上课时间, 第三维表示不同时期相同时间的课程
      * @throws Exception
      */
-    public HfutClass[][][] getStudentLessonTable() throws Exception {
+    public HfutClass[][][] getStudentLessonTable() {
         HttpResponse res = fetch.fetchSitePage(SiteConst.studentLessonTable);
         return RegexMatch.matchStudentLessonList(getContent(res));
     }
@@ -60,7 +59,7 @@ public class HfutEduLib {
      * @return 教学班列表
      * @throws Exception
      */
-    public List<Map<String, String>> getLessonAndClassOfUser() throws Exception {
+    public List<Map<String, String>> getLessonAndClassOfUser() {
         
         HttpResponse res = fetch.fetchSitePage(SiteConst.lessonAndClassOfUser);
         return RegexMatch.matchLessonAndClassOfUser(getContent(res));
@@ -75,7 +74,7 @@ public class HfutEduLib {
      * @return 学生列表
      * @throws Exception
      */
-    public List<HfutStudent> getClassStudentList(String termId, String lessonId, String classId) throws Exception {
+    public List<HfutStudent> getClassStudentList(String termId, String lessonId, String classId) {
         
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("xqdm", termId);
@@ -84,7 +83,7 @@ public class HfutEduLib {
         
         HttpResponse res = fetch.fetchSitePage(SiteConst.classStudentList, requestParams);
         List<Map<String, String>> matchList = RegexMatch.matchClassStudentList(getContent(res));
-        return mapListToModelList(HfutStudent.class, matchList);
+        return mapListToModelList(matchList, HfutStudent.class);
     }
     
     /**
@@ -92,7 +91,7 @@ public class HfutEduLib {
      * @return 学生信息
      * @throws Exception
      */
-    public Map<String, String> getStudentDetailInfo() throws Exception {
+    public Map<String, String> getStudentDetailInfo() {
     	HttpResponse res = fetch.fetchSitePage(SiteConst.studentInfo);
     	return RegexMatch.matchStudentDetailInfo(getContent(res));
     }
@@ -106,7 +105,7 @@ public class HfutEduLib {
      * @return 课程列表
      * @throws Exception
      */
-    public List<Map<String, String>> getMajorLessonPlan(String termId, String lessonTypeId, String gradeMajorId) throws Exception {
+    public List<Map<String, String>> getMajorLessonPlan(String termId, String lessonTypeId, String gradeMajorId) {
     	Map<String, Object> requestParams = new HashMap<>();
     	requestParams.put("xqdm", termId);
     	requestParams.put("kclxdm", lessonTypeId);
@@ -122,10 +121,10 @@ public class HfutEduLib {
      * @return 年级专业列表
      * @throws Exception
      */
-    public List<HfutMajor> getMajorList() throws Exception {
+    public List<HfutMajor> getMajorList() {
         HttpResponse res = fetch.fetchSitePage(SiteConst.majorList);
         List<Map<String, String>> matchList = RegexMatch.matchMajorList(getContent(res));
-        return mapListToModelList(HfutMajor.class, matchList);
+        return mapListToModelList(matchList, HfutMajor.class);
     }
     
     /**
@@ -136,7 +135,7 @@ public class HfutEduLib {
      * @return 教学班列表
      * @throws Exception
      */
-    public List<Map<String, String>> getLessonClassListByLessonId(String termId, String lessonId) throws Exception {
+    public List<Map<String, String>> getLessonClassListByLessonId(String termId, String lessonId) {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("xqdm", termId);
         requestParams.put("kcdm", lessonId);
@@ -153,7 +152,7 @@ public class HfutEduLib {
      * @return 教学班列表
      * @throws Exception
      */
-    public List<Map<String, String>> getLessonClassListByLessonName(String termId, String lessonName) throws Exception {
+    public List<Map<String, String>> getLessonClassListByLessonName(String termId, String lessonName) {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("xqdm", termId);
         requestParams.put("kcmc", lessonName);
@@ -171,7 +170,7 @@ public class HfutEduLib {
      * @return 教学班详情
      * @throws Exception
      */
-    public Map<String, String> getClassDetailInfo(String termId, String lessonId, String classId) throws Exception {
+    public Map<String, String> getClassDetailInfo(String termId, String lessonId, String classId) {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("xqdm", termId);
         requestParams.put("jxbh", classId);
@@ -187,7 +186,7 @@ public class HfutEduLib {
      * @return 考试成绩列表
      * @throws Exception
      */
-    public List<Map<String, String>> getLessonScoreList() throws Exception {
+    public List<Map<String, String>> getLessonScoreList() {
     	HttpResponse res = fetch.fetchSitePage(SiteConst.lessonScoreList);
     	return RegexMatch.matchLessonScoreList(getContent(res));
     }
@@ -195,19 +194,30 @@ public class HfutEduLib {
     
 
     
-    private String getContent(HttpResponse res) throws ParseException, IOException {
-        String content =  EntityUtils.toString(res.getEntity(), SiteConst.encode);
-        return content;
+    private String getContent(HttpResponse res) {
+        String content;
+        try {
+            content = EntityUtils.toString(res.getEntity(), SiteConst.encode);
+            return content;
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     
-    private <T> T mapToModel(Class<T> type, Map<String, String> map) throws Exception {
-        return type.getConstructor(Map.class).newInstance(map);
+    private <T> T mapToModel(Map<String, String> map, Class<T> type) {
+        try {
+            return type.getConstructor(Map.class).newInstance(map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     
-    private <T> List<T> mapListToModelList(Class<T> type, List<Map<String, String>> mapList) throws Exception {
+    private <T> List<T> mapListToModelList(List<Map<String, String>> mapList, Class<T> type) {
         List<T> resultList = new ArrayList<>();
         for (Map<String, String> map : mapList) {
-            resultList.add(mapToModel(type, map));
+            resultList.add(mapToModel(map, type));
         }
         return resultList;
     }
