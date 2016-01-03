@@ -55,7 +55,7 @@ public class HfutEduLib {
     
     /**
      * 获取登录用户当前学期的教学班列表(含课程信息)
-     * termId, lessonId, lessonName
+     * termId, lessonId, classId, lessonName
      * @return 教学班列表
      * @throws Exception
      */
@@ -117,7 +117,7 @@ public class HfutEduLib {
     
     /**
      * 获取年级专业列表
-     * majorId, majorName
+     * gradeMajorId, gradeMajorName
      * @return 年级专业列表
      * @throws Exception
      */
@@ -129,7 +129,7 @@ public class HfutEduLib {
     
     /**
      * 通过课程id获取课程的教学班列表
-     * lessonName, classId, maxStudentNumber, teacherId, teacherName, lessonType
+     * lessonId, lessonName, classId, maxStudentNumber, teacherId, teacherName, lessonType
      * @param termId 学期id
      * @param lessonId 课程id
      * @return 教学班列表
@@ -146,7 +146,7 @@ public class HfutEduLib {
     
     /**
      * 通过课程名查询课程, 获取相关课程的教学班列表
-     * lessonName, classId, maxStudentNumber, teacherId, teacherName, lessonType
+     * lessonId, lessonName, classId, maxStudentNumber, teacherId, teacherName, lessonType
      * @param termId 学期id
      * @param lessonName 课程名(可使用关键字)
      * @return 教学班列表

@@ -4,31 +4,32 @@ import java.util.Map;
 
 public class HfutMajor {
 
-    private String majorId;
+    private String gradeMajorId;
     
-    private String majorName;
+    private String gradeMajorName;
     
     public HfutMajor(Map<String, String> match) {
         
-        majorId     =   match.get("majorId");
-        majorName   =   match.get("majorName");
+        gradeMajorId     =   match.get("gradeMajorId");
+        gradeMajorName   =   match.get("gradeMajorName");
     }
 
-    public String getMajorId() {
-        return majorId;
-    }
+	public String getGradeMajorId() {
+		return gradeMajorId;
+	}
 
-    public void setMajorId(String majorId) {
-        this.majorId = majorId;
-    }
+	public void setGradeMajorId(String gradeMajorId) {
+		this.gradeMajorId = gradeMajorId;
+	}
 
-    public String getMajorName() {
-        return majorName;
-    }
+	public String getGradeMajorName() {
+		return gradeMajorName;
+	}
 
-    public void setMajorName(String majorName) {
-        this.majorName = majorName;
-    }
+	public void setGradeMajorName(String gradeMajorName) {
+		this.gradeMajorName = gradeMajorName;
+	}
+
     
     
 }

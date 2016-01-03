@@ -43,7 +43,7 @@ public class TestHfutEduLib {
     public void testGetLessonAndClassOfUser() throws Exception {
         List<Map<String, String>> matchList = edu.getLessonAndClassOfUser();
         assertFalse(matchList.isEmpty());
-        assertEquals(3, matchList.get(0).size());
+        assertEquals(4, matchList.get(0).size());
     }
     
     @Test(timeout=1000)
@@ -64,21 +64,21 @@ public class TestHfutEduLib {
     public void testGetMajorList() throws Exception {
         List<HfutMajor> matchList = edu.getMajorList();
         assertFalse(matchList.isEmpty());
-        assertNotNull(matchList.get(0).getMajorName());
+        assertNotNull(matchList.get(0).getGradeMajorId());
     }
     
     @Test(timeout=1000)
     public void testGetLessonClassListByLessonId() throws Exception {
         List<Map<String, String>> matchList = edu.getLessonClassListByLessonId("027", "0200051B");
         assertEquals(29, matchList.size());
-        assertEquals(6, matchList.get(0).size());
+        assertEquals(7, matchList.get(0).size());
     }
     
     @Test(timeout=1000)
     public void testGetLessonClassListByLessonName() throws Exception {
         List<Map<String, String>> matchList = edu.getLessonClassListByLessonName("027", "离散");
         assertEquals(3, matchList.size());
-        assertEquals(6, matchList.get(0).size());
+        assertEquals(7, matchList.get(0).size());
     }
     
     @Test(timeout=1000)

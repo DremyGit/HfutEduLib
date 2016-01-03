@@ -14,8 +14,8 @@ public class RegexMatch {
 
     public static List<Map<String, String>> matchLessonAndClassOfUser(String content) {
         
-        String regexStr = "name=\"xqdm\" value=(?<termId>\\w*)>\\s*.*value=(?<lessonId>\\w*)>\\s*.*value=(?<jxbh>\\w*)>\\s+.+\\s+.+\\s+[^>]*>(?<lessonName>[^<]*)";
-        String[] keys = {"termId", "lessonId", "lessonName"};
+        String regexStr = "name=\"xqdm\" value=(?<termId>\\w*)>\\s*.*value=(?<lessonId>\\w*)>\\s*.*value=(?<classId>\\w*)>\\s+.+\\s+.+\\s+[^>]*>(?<lessonName>[^<]*)";
+        String[] keys = {"termId", "lessonId", "classId", "lessonName"};
         return matchList(content, regexStr, keys);
     }
     
@@ -61,14 +61,14 @@ public class RegexMatch {
     }
     
     public static List<Map<String, String>> matchMajorList(String content) {
-        String regexStr = "<option value=\"(?<majorId>\\d{10})\">(?<majorName>[^<]+)</option>";
-        String[] keys = {"majorId", "majorName"};
+        String regexStr = "<option value=\"(?<gradeMajorId>\\d{10})\">(?<gradeMajorName>[^<]+)</option>";
+        String[] keys = {"gradeMajorId", "gradeMajorName"};
         return matchList(content, regexStr, keys);
     }
     
     public static List<Map<String, String>> matchLessonClassList(String content) {
-        String regexStr = "<td[^>]+>(?<lessonName>[^<]+)</td>\\s+<td[^>]+>(?<classId>\\d{4})</td>\\s+<td[^>]+>(?<maxStudentNumber>[^<]*)</td>\\s+.+\\s+[^']+'(?<teacherId>\\d{8}).+\\s+(?<teacherName>\\S+)\\s+\\S+\\s+</td>\\s+<td[^>]+>(?<lessonType>[^<]+)";
-        String[] keys = {"lessonName", "classId", "maxStudentNumber", "teacherId", "teacherName", "lessonType"};
+        String regexStr = "(?<lessonId>\\w+)</a></td>\\s+<td[^>]+>(?<lessonName>[^<]+)</td>\\s+<td[^>]+>(?<classId>\\d{4})</td>\\s+<td[^>]+>(?<maxStudentNumber>[^<]*)</td>\\s+.+\\s+[^']+'(?<teacherId>\\d{8}).+\\s+(?<teacherName>\\S+)\\s+\\S+\\s+</td>\\s+<td[^>]+>(?<lessonType>[^<]+)";
+        String[] keys = {"lessonId", "lessonName", "classId", "maxStudentNumber", "teacherId", "teacherName", "lessonType"};
         return matchList(content, regexStr, keys);
     }
     
